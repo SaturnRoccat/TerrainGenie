@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"compress/gzip"
 	"fmt"
 	"os"
 	"unsafe"
@@ -85,7 +87,26 @@ func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palle
 		addWorldDataToBinaryNoRLE(worldData, &dataBuffer)
 	}
 	println("Added world data to buffer saving to file...")
-	permissions := 0644 // or whatever you need
-	os.WriteFile(config.OutputPath, dataBuffer, os.FileMode(permissions))
+
+	var buffer bytes.Buffer
+	var writer = gzip.NewWriter(&buffer)
+
+	_, err := writer.Write(dataBuffer)
+	if err != nil {
+		panic(err)
+	}
+
+	err = writer.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.WriteFile(config.OutputPath+".cbin", buffer.Bytes(), 0644)
+	if err != nil {
+		panic(err)
+	}
+	buffer.Reset()
+
+	os.WriteFile(config.OutputPath+".ubin", dataBuffer, 0644)
 	println("Saved to file! at path:", config.OutputPath)
 }
