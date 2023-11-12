@@ -25,13 +25,27 @@ func int16arrayToBytes(array *[ChunkWidth * ChunkHeight * ChunkDepth]uint16) []b
 	return buffer
 }
 
+func compressedint16arrayToBytes(array *[ChunkWidth * ChunkHeight * ChunkDepth]uint16) []byte {
+	var buffer = int16arrayToBytes(array)
+	var compressedBuffer bytes.Buffer
+	var writer = gzip.NewWriter(&compressedBuffer)
+	_, err := writer.Write(buffer)
+	if err != nil {
+		return nil
+	}
+
+	return compressedBuffer.Bytes()
+}
+
 func addWorldDataToBinaryNoRLE(worldData *[]TG_Level_Chunk, dataBuffer *[]byte) {
-	var chunkData = make([]byte, 0)
+	var chunkData []byte
 	for index, chunk := range *worldData {
 		println("Adding Chunk:", index)
-		chunkData = append(chunkData, int16arrayToBytes(&chunk.BlockData)...)
+		chunkData = compressedint16arrayToBytes(&chunk.BlockData)
+		*dataBuffer = append(*dataBuffer, 0xFF, 0xAA, 0xFF, 0xAA) // Chunk start flag
+		*dataBuffer = append(*dataBuffer, chunkData...)
+		*dataBuffer = append(*dataBuffer, 0xAA, 0xFF, 0xAA, 0xFF) // Chunk end flag
 	}
-	*dataBuffer = append(*dataBuffer, chunkData...)
 }
 
 func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palletData *TG_Pallet_Data) {
