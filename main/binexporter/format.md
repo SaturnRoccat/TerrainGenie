@@ -22,8 +22,12 @@ The world data should have a single byte `00` at the start that specifies if it 
 | 00 | Does not use RLE |
 | 01 | Does use RLE
 
-after that the world  data will get written in the format of XZY it should flatten each slice down into a 1D stream 
-then it should move onto the next slice. Each block has a 2 byte identifier which should act as a direct index into the pallet eg. `0A` signifies that the block at that position has the value of the 0A index of the pallet (the 11nth item) 
+after that the world  data will get written in the format of XYZ it should flatten each slice down into a 1D stream 
+then it should move onto the next slice. Each block has a 2 byte identifier which should act as a direct index into the pallet eg. `0A` signifies that the block at that position has the value of the 0A index of the pallet (the 11nth item)  
+Each chunk has to have a chunk start flag `FF AA FF AA` and a chunk end flag `AA FF AA FF`.  
+All data between these two flags should get treated as compressed chunk data  
+It is important to remember each chunk gets compressed with zip before getting added to the file.  
+Before you attempt to read any data from a chunk make sure you have decompressed it
 
 # Writing to disk
 When the world data gets wrote to disk it will get compressed into a zip to reduce the size on disk so make sure to decompress it first before trying to parse the data
