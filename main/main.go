@@ -11,7 +11,7 @@ func main() {
 	var config TG_Config
 
 	flag.StringVar(&config.OutputPath, "output", "./levelData.bin", "Output path for generated terrain data")
-	flag.Uint64Var(&config.Seed, "seed", rand.Uint64(), "Seed for random number generator")
+	flag.IntVar(&config.Seed, "seed", rand.Int(), "Seed for random number generator")
 	flag.Parse()
 
 	fmt.Println("Output path:", config.OutputPath)
