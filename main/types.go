@@ -4,6 +4,7 @@ package main
 
 import (
 	"duckos/TerrainGenie/fastnoise"
+	"encoding/binary"
 	"math"
 )
 
@@ -21,6 +22,7 @@ type TG_Config struct {
 	XSize      int
 	ZSize      int
 	YSize      int
+	EnableRLE  bool
 	// Noise parameters
 }
 
@@ -47,6 +49,10 @@ type TG_Level_Chunk struct {
 	ChunkPosition TG_Chunk_Pos // Chunk position in chunk coordinates
 
 	HeightMap [ChunkWidth * ChunkWidth]uint16
+}
+
+type TG_Pallet_Data struct {
+	pallet []string
 }
 
 type TG_2D_Pos TG_Chunk_Pos // Just another name for TG_Chunk_Pos with out having to redefine it
@@ -124,4 +130,73 @@ func makeTG_Level_Chunk(x, z int32) TG_Level_Chunk {
 	chunk.ChunkPosition.x = x
 	chunk.ChunkPosition.z = z
 	return chunk
+}
+
+func addToPallet(pallet *TG_Pallet_Data, block string) uint16 {
+	pallet.pallet = append(pallet.pallet, block)
+	return uint16(len(pallet.pallet) - 1)
+}
+
+type uiint16 interface {
+	uint16 | int16
+}
+
+type uiint8 interface {
+	uint8 | int8
+}
+
+type uiint64 interface {
+	uint64 | int64
+}
+
+type uiint32 interface {
+	uint32 | int32
+}
+
+func int32ToBytes[T uiint32](value T) []byte {
+	var buffer = make([]byte, 4)
+	binary.BigEndian.PutUint32(buffer, uint32(value))
+	return buffer
+}
+
+func int16ToBytes[T uiint16](value T) []byte {
+	var buffer = make([]byte, 2)
+	binary.BigEndian.PutUint16(buffer, uint16(value))
+	return buffer
+}
+
+func int64ToBytes[T uiint64](value T) []byte {
+	var buffer = make([]byte, 8)
+	binary.BigEndian.PutUint64(buffer, uint64(value))
+	return buffer
+}
+
+func int8ToBytes[T uiint8](value T) []byte {
+	var buffer = make([]byte, 1)
+	buffer[0] = uint8(value)
+	return buffer
+}
+
+func BytesToInt32[T uiint32](buffer []byte) T {
+	return T(binary.BigEndian.Uint32(buffer))
+}
+
+func BytesToInt16[T uiint16](buffer []byte) T {
+	return T(binary.BigEndian.Uint16(buffer))
+}
+
+func BytesToInt64[T uiint64](buffer []byte) T {
+	return T(binary.BigEndian.Uint64(buffer))
+}
+
+func BytesToInt8[T uiint8](buffer []byte) T {
+	return T(buffer[0])
+}
+
+func boolToUint8(value bool) uint8 {
+	if value {
+		return 1
+	} else {
+		return 0
+	}
 }
