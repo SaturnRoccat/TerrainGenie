@@ -1,6 +1,6 @@
 # Format
 The first 4 bytes `00 00 00 00` are used to specify how far to jump in to get the the data of the world  
-The next 4 bytes `00 00 00` are used to specify how far to jump in to start reading the pallet  
+The next 4 bytes `00 00 00 00` are used to specify how far to jump in to start reading the pallet  
 The next 2 bytes `00 00` are used to specify how wide each chunk is  
 The next 2 bytes `00 00` are used to specify how deep each chunk is  
 The next 2 bytes `00 00` are used to specify how tall each chunk is
