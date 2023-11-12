@@ -13,8 +13,8 @@ func main() {
 
 	flag.StringVar(&config.OutputPath, "output", "./levelData.bin", "Output path for generated terrain data")
 	flag.IntVar(&config.Seed, "seed", rand.Int(), "Seed for random number generator")
-	flag.IntVar(&config.XSize, "X", 8, "The size in CHUNKS of the X axis of the world")
-	flag.IntVar(&config.ZSize, "Z", 8, "The size in CHUNKS of the Z axis of the world")
+	flag.IntVar(&config.XSize, "X", 24, "The size in CHUNKS of the X axis of the world")
+	flag.IntVar(&config.ZSize, "Z", 24, "The size in CHUNKS of the Z axis of the world")
 	flag.IntVar(&config.YSize, "Y", 300, "The size in BLOCKS of the Y axis of the world")
 
 	flag.Parse()
