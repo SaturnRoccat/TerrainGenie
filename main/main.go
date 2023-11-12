@@ -22,11 +22,16 @@ func main() {
 	fmt.Println("Output path:", config.OutputPath)
 	fmt.Println("Seed:", config.Seed)
 
+	// Pallet Data
+	var palletData = TG_Pallet_Data{}
+	addToPallet(&palletData, "minecraft:air")
+	addToPallet(&palletData, "minecraft:stone")
+
 	if generateJS {
 		fmt.Println("Generating JavaScript...")
 	} else {
 		fmt.Println("Generating binary of world data this will take some time...")
-		buildDataBuffer(config)
+		buildDataBuffer(config, &palletData)
 	}
 
 }
