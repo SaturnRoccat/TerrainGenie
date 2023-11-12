@@ -117,7 +117,7 @@ func blankedNoise(chunk_p *TG_Level_Chunk, generator_p *TG_Generator) {
 			var WorldZ = z + ChunkPAsWorldP.z
 			for y := int32(0); y < int32(chunk_p.HeightMap[x+z*ChunkWidth]); y++ {
 				var cave = mapToZeroOne(generator_p.CaveShapeState.GetNoise3D(float32(WorldP), float32(y), float32(WorldZ)))
-				if cave > 0.5 {
+				if cave > 0.7 {
 					chunk_p.BlockData[TG_3D_PosToIndex(TG_3D_Pos{x, y, z})] = 0
 				}
 			}
