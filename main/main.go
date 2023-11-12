@@ -11,7 +11,7 @@ func main() {
 	var config TG_Config
 	var generateJS bool = false
 
-	flag.StringVar(&config.OutputPath, "output", "./levelData.bin", "Output path for generated terrain data")
+	flag.StringVar(&config.OutputPath, "output", "./levelData", "Output path for generated terrain data")
 	flag.IntVar(&config.Seed, "seed", rand.Int(), "Seed for random number generator")
 	flag.IntVar(&config.XSize, "X", 24, "The size in CHUNKS of the X axis of the world")
 	flag.IntVar(&config.ZSize, "Z", 24, "The size in CHUNKS of the Z axis of the world")
