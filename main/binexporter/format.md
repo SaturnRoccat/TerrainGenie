@@ -31,3 +31,14 @@ Before you attempt to read any data from a chunk make sure you have decompressed
 
 # Writing to disk
 When the world data gets wrote to disk it will get compressed into a zip to reduce the size on disk so make sure to decompress it first before trying to parse the data
+
+# None RLE chunk data
+If the chunk data you are reading doesn't have the RLE flag set that means it stores the type of every block in the chunk 1 at a time
+# RLE chunk data
+if the chunk data you are reading has the RLE flag set that means that for each vertical strip of blocks on the Y axis it try to encode the block type then the length it runs for like this `00 00 00 FF`  
+|Hex| Meaning |
+|--|--|
+| 00 00 | This means that we are using the block at index 0 in the pallet |
+| 00 FF | This means that we use this same block for 255 blocks vertically |
+ 
+
