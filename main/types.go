@@ -4,6 +4,7 @@ package main
 
 import (
 	"duckos/TerrainGenie/fastnoise"
+	"math"
 )
 
 const (
@@ -17,7 +18,9 @@ const (
 type TG_Config struct {
 	Seed       int
 	OutputPath string
-
+	XSize      int
+	ZSize      int
+	YSize      int
 	// Noise parameters
 }
 
@@ -46,6 +49,8 @@ type TG_Level_Chunk struct {
 	HeightMap [ChunkWidth * ChunkWidth]uint16
 }
 
+type TG_2D_Pos TG_Chunk_Pos // Just another name for TG_Chunk_Pos with out having to redefine it
+
 func TG_3D_PosToIndex(pos TG_3D_Pos) int32 {
 	return pos.x + pos.y*ChunkWidth + pos.z*ChunkWidth*ChunkWidth
 }
@@ -54,6 +59,15 @@ func TG_Chunk_PosTo_3D_Pos(pos TG_Chunk_Pos) TG_3D_Pos {
 	return TG_3D_Pos{pos.x * ChunkWidth, 0, pos.z * ChunkDepth}
 }
 
+func mapToZeroOne(value float32) float32 {
+	// Ensure the value is within the valid range
+	clampedValue := float32(math.Max(-1, math.Min(float64(value), 1)))
+
+	// Map the value from the range [-1, 1] to [0, 1]
+	mappedValue := (clampedValue + 1) / 2
+
+	return mappedValue
+}
 func makeTG_Generator(seed int) TG_Generator {
 	var gen TG_Generator
 	gen.TerrainBlanketShapeState = fastnoise.New[float32]()
@@ -74,7 +88,8 @@ func blankedNoise(chunk_p *TG_Level_Chunk, generator_p *TG_Generator) {
 		var WorldP = x + ChunkPAsWorldP.x
 		for z := int32(0); z < ChunkDepth; z++ {
 			var WorldZ = z + ChunkPAsWorldP.z
-			var height = int32(generator_p.TerrainBlanketShapeState.GetNoise2D(float32(WorldP), float32(WorldZ)) * AmplitudeConstant) // Get height from noise this should be illigal and it should be in a lambda or function but I'm lazy
+			var height = int32(
+				mapToZeroOne(generator_p.TerrainBlanketShapeState.GetNoise2D(float32(WorldP), float32(WorldZ))) * AmplitudeConstant) // Get height from noise this should be illigal and it should be in a lambda or function but I'm lazy
 			chunk_p.HeightMap[x+z*ChunkWidth] = uint16(height)
 			chunk_p.BlockData[TG_3D_PosToIndex(TG_3D_Pos{x, height, z})] = 1 // Temp constant for stone this should be replaced by a cached block id
 		}
@@ -95,7 +110,7 @@ func blankedNoise(chunk_p *TG_Level_Chunk, generator_p *TG_Generator) {
 		for z := int32(0); z < ChunkDepth; z++ {
 			var WorldZ = z + ChunkPAsWorldP.z
 			for y := int32(0); y < int32(chunk_p.HeightMap[x+z*ChunkWidth]); y++ {
-				var cave = generator_p.CaveShapeState.GetNoise3D(float32(WorldP), float32(y), float32(WorldZ))
+				var cave = mapToZeroOne(generator_p.CaveShapeState.GetNoise3D(float32(WorldP), float32(y), float32(WorldZ)))
 				if cave > 0.5 {
 					chunk_p.BlockData[TG_3D_PosToIndex(TG_3D_Pos{x, y, z})] = 0
 				}
