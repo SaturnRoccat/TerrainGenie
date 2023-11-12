@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"unsafe"
 )
 
@@ -12,6 +13,23 @@ type TG_Header struct {
 	ChunkWidth  int16
 	ChunkDepth  int16
 	ChunkHeight int16
+}
+
+func int16arrayToBytes(array *[ChunkWidth * ChunkHeight * ChunkDepth]uint16) []byte {
+	var buffer = make([]byte, 0)
+	for _, value := range array {
+		buffer = append(buffer, int16ToBytes(value)...)
+	}
+	return buffer
+}
+
+func addWorldDataToBinaryNoRLE(worldData *[]TG_Level_Chunk, dataBuffer *[]byte) {
+	var chunkData = make([]byte, 0)
+	for index, chunk := range *worldData {
+		println("Adding Chunk:", index)
+		chunkData = append(chunkData, int16arrayToBytes(&chunk.BlockData)...)
+	}
+	*dataBuffer = append(*dataBuffer, chunkData...)
 }
 
 func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palletData *TG_Pallet_Data) {
@@ -60,4 +78,14 @@ func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palle
 	fmt.Print("Data Buffer (This includes the header):")
 	fmt.Println(dataBuffer)
 	println("Added pallet to buffer")
+	println("Adding world data to buffer...")
+	if config.EnableRLE {
+		// We cry here
+	} else {
+		addWorldDataToBinaryNoRLE(worldData, &dataBuffer)
+	}
+	println("Added world data to buffer saving to file...")
+	permissions := 0644 // or whatever you need
+	os.WriteFile(config.OutputPath, dataBuffer, os.FileMode(permissions))
+	println("Saved to file! at path:", config.OutputPath)
 }
