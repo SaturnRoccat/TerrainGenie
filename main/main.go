@@ -17,6 +17,7 @@ func main() {
 	flag.IntVar(&config.ZSize, "Z", 24, "The size in CHUNKS of the Z axis of the world")
 	flag.IntVar(&config.YSize, "Y", 300, "The size in BLOCKS of the Y axis of the world")
 	flag.BoolVar(&config.OutputNonCompressed, "ONC", false, "Ouput non compressed binary data")
+	flag.BoolVar(&config.EnableRLE, "RLE", false, "Enable RLE compression this reduces memory usage but takes longer to generate")
 
 	flag.Parse()
 
