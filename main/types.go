@@ -17,12 +17,13 @@ const (
 )
 
 type TG_Config struct {
-	Seed       int
-	OutputPath string
-	XSize      int
-	ZSize      int
-	YSize      int
-	EnableRLE  bool
+	Seed                int
+	OutputPath          string
+	XSize               int
+	ZSize               int
+	YSize               int
+	EnableRLE           bool
+	OutputNonCompressed bool
 	// Noise parameters
 }
 

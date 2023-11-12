@@ -58,7 +58,7 @@ func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palle
 	header.PalletDataStart = int32(14) // 14 is the size of the header
 	header.WorldDataStart = header.PalletDataStart + calculateSizeOfPallet(palletData)
 	header.ChunkWidth = int16(config.XSize)
-	header.ChunkHeight = int16(config.YSize)
+	header.ChunkHeight = int16(ChunkHeight)
 	header.ChunkDepth = int16(config.ZSize)
 
 	// Write the header
@@ -107,6 +107,9 @@ func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palle
 	}
 	buffer.Reset()
 
-	os.WriteFile(config.OutputPath+".ubin", dataBuffer, 0644)
+	if config.OutputNonCompressed {
+		os.WriteFile(config.OutputPath+".ubin", dataBuffer, 0644)
+	}
+
 	println("Saved to file! at path:", config.OutputPath)
 }
