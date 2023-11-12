@@ -12,7 +12,7 @@ func getFromWorldChunks(pos TG_2D_Pos, XSize int32) *TG_Level_Chunk {
 	return &WorldChunks[pos.x+pos.z*XSize]
 }
 
-func buildDataBuffer(config TG_Config) {
+func buildDataBuffer(config TG_Config, palletData *TG_Pallet_Data) {
 	fmt.Println("Building data buffer...")
 	WorldChunks = make([]TG_Level_Chunk, config.XSize*config.ZSize) // Allocate memory for the world we shouldnt need to do any more large allocations after this for the world generator
 
@@ -28,4 +28,6 @@ func buildDataBuffer(config TG_Config) {
 		}
 	}
 	fmt.Println("Building data buffer... Done!")
+
+	turnWorldDataToBinary(&WorldChunks, &config, palletData)
 }
