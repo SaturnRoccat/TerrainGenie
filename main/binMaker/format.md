@@ -1,14 +1,15 @@
 # Format
 The first 4 bytes `00 00 00 00` are used to specify how far to jump in to get the the data of the world  
-The next 4 bytes `00 00 00` are used to specify how far to jump in to start reading the pallet
+The next 4 bytes `00 00 00` are used to specify how far to jump in to start reading the pallet  
 The next 2 bytes `00 00` are used to specify how wide each chunk is  
 The next 2 bytes `00 00` are used to specify how deep each chunk is  
 The next 2 bytes `00 00` are used to specify how tall each chunk is
 The next 2 bytes `00 00` are used to specify the length of the pallet
-So a full header should could look something like  `00 00 00 FF 00 10 00 10 01 5E 00 0A`
+So a full header should could look something like  `00 00 00 FF 00 00 00 0F 00 10 00 10 01 5E 00 0A`
 | Hex | Meaning |
 |--|--|
 | 00 00 00 FF | This means that the data for the world starts 255 bytes in 
+| 00 00 00 0F | This means that the data for the pallet starts 15 bytes in
 | 00 10 | This means that each chunk is 16 wide 
 | 00 10 | This means that each chunk is 16 deep
 | 01 5E | This means that each chunk is 350 tall
