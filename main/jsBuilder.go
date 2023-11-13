@@ -11,7 +11,7 @@ func addJsLine(TSCode *string, line string) {
 }
 
 func createJSDataNonRLE(config *TG_Config, palletData *TG_Pallet_Data) {
-	var TSCode = "export const blockPallet: string[] = [" // Start of the pallet
+	var TSCode = "export const blockPallet = [" // Start of the pallet
 	for _, blockName := range palletData.pallet {
 		TSCode += "\"" + blockName + "\","
 	}
@@ -20,12 +20,12 @@ func createJSDataNonRLE(config *TG_Config, palletData *TG_Pallet_Data) {
 	TSCode += "];\n" // End of the pallet
 	print(TSCode)
 	// Add used data to the TSCode
-	addJsLine(&TSCode, "export const chunkWidth: number = "+fmt.Sprint(config.XSize)+";")
-	addJsLine(&TSCode, "export const chunkDepth: number = "+fmt.Sprint(config.ZSize)+";")
-	addJsLine(&TSCode, "export const chunkHeight: number = "+fmt.Sprint(ChunkHeight)+";")
+	addJsLine(&TSCode, "export const chunkWidth = "+fmt.Sprint(config.XSize)+";")
+	addJsLine(&TSCode, "export const chunkDepth = "+fmt.Sprint(config.ZSize)+";")
+	addJsLine(&TSCode, "export const chunkHeight = "+fmt.Sprint(config.YSize)+";")
 	print(TSCode)
 	// Add the chunk data
-	addJsLine(&TSCode, "export const chunkData: string[][]  = [\n") // Start of the chunk data this could get thick
+	addJsLine(&TSCode, "export const chunkData = [\n") // Start of the chunk data this could get thick
 	for _, chunk := range WorldChunks {
 		addJsLine(&TSCode, "[")
 
