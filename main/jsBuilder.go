@@ -20,10 +20,10 @@ func createJSDataNonRLE(config *TG_Config, palletData *TG_Pallet_Data) {
 	TSCode += "];\n" // End of the pallet
 	print(TSCode)
 	// Add used data to the TSCode
-	addJsLine(&TSCode, "export const chunkWidth: number = "+fmt.Sprint(config.XSize)+";")
-	addJsLine(&TSCode, "export const chunkDepth: number = "+fmt.Sprint(config.ZSize)+";")
-	addJsLine(&TSCode, "export const chunkHeight: number = "+fmt.Sprint(config.YSize)+";")
-	addJsLine(&TSCode, "export const RLE: boolean = false;")
+	addJsLine(&TSCode, "export const chunkWidth = "+fmt.Sprint(config.XSize)+";")
+	addJsLine(&TSCode, "export const chunkDepth = "+fmt.Sprint(config.ZSize)+";")
+	addJsLine(&TSCode, "export const chunkHeight = "+fmt.Sprint(config.YSize)+";")
+	addJsLine(&TSCode, "export const RLE = false;")
 	print(TSCode)
 	// Add the chunk data
 	addJsLine(&TSCode, "export const chunkData = [\n") // Start of the chunk data this could get thick
