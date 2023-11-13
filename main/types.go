@@ -59,6 +59,10 @@ type TG_Pallet_Data struct {
 
 type TG_2D_Pos TG_Chunk_Pos // Just another name for TG_Chunk_Pos with out having to redefine it
 
+func TG_2D_PosToIndex(pos TG_2D_Pos) int32 {
+	return pos.x + pos.z*ChunkWidth
+}
+
 func TG_3D_PosToIndex(pos TG_3D_Pos) int32 {
 	return pos.x + pos.y*ChunkWidth + pos.z*ChunkWidth*ChunkHeight
 }
