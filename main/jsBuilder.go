@@ -42,6 +42,10 @@ func createJSData(config *TG_Config, palletData *TG_Pallet_Data) {
 		for i := 1; i < len(ResultingByteArray); i += 2 {
 			ResultingByteArray[i] = 0x2C
 		}
+		// Add 33 to every other byte this is to make the hex values valid and can be shown as a string
+		for i := 0; i < len(ResultingByteArray); i += 2 {
+			ResultingByteArray[i] += 33
+		}
 
 		PointerToByteArray := uintptr(unsafe.Pointer(&ResultingByteArray[0]))
 		stringHeader := &reflect.StringHeader{
