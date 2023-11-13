@@ -11,9 +11,9 @@ import (
 const (
 	// Chunk dimensions
 	ChunkWidth        = 16
-	ChunkHeight       = 256
+	ChunkHeight       = 128
 	ChunkDepth        = 16
-	AmplitudeConstant = 120
+	AmplitudeConstant = 128
 )
 
 type TG_Config struct {
@@ -60,11 +60,11 @@ type TG_Pallet_Data struct {
 type TG_2D_Pos TG_Chunk_Pos // Just another name for TG_Chunk_Pos with out having to redefine it
 
 func TG_3D_PosToIndex(pos TG_3D_Pos) int32 {
-	return pos.x + pos.y*ChunkWidth + pos.z*ChunkWidth*ChunkWidth
+	return pos.x + pos.y*ChunkWidth + pos.z*ChunkWidth*ChunkHeight
 }
 
 func TG_Chunk_PosTo_3D_Pos(pos TG_Chunk_Pos) TG_3D_Pos {
-	return TG_3D_Pos{pos.x * ChunkWidth, 0, pos.z * ChunkDepth}
+	return TG_3D_Pos{pos.x*ChunkWidth - 1, 0, pos.z*ChunkDepth - 1}
 }
 
 func mapToZeroOne(value float32) float32 {
