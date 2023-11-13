@@ -4,5 +4,5 @@
 *.bin
 *.ubin
 *.cbin
-*.js
+levelData.js
 *.ts
