@@ -19,6 +19,7 @@ const (
 type TG_Config struct {
 	Seed                int
 	OutputPath          string
+	JSOutputPath        string
 	XSize               int
 	ZSize               int
 	YSize               int
