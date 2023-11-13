@@ -18,7 +18,7 @@ func main() {
 	flag.IntVar(&config.ZSize, "Z", 4, "The size in CHUNKS of the Z axis of the world")
 	flag.IntVar(&config.YSize, "Y", 256, "The size in BLOCKS of the Y axis of the world")
 	flag.BoolVar(&config.OutputNonCompressed, "ONC", false, "Output non compressed binary data")
-	flag.BoolVar(&config.EnableRLE, "RLE", false, "Enable RLE compression this reduces memory usage but takes longer to generate")
+	flag.BoolVar(&config.EnableRLE, "RLE", false, "This is experimental and may not work")
 	flag.BoolVar(&generateJS, "JS", true, "Generate JavaScript from the world data")
 
 	flag.Parse()
@@ -38,6 +38,10 @@ func main() {
 	// The reason for this is because it uses unsafe pointers and it modifies the data in the world chunks
 	if generateJS {
 		fmt.Println("Generating JavaScript...")
-		createJSDataNonRLE(&config, &palletData)
+		if config.EnableRLE {
+			createJSDataRLE(&config, &palletData)
+		} else {
+			createJSDataNonRLE(&config, &palletData)
+		}
 	}
 }
