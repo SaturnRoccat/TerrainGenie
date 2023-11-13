@@ -72,7 +72,7 @@ func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palle
 	header.PalletDataStart = int32(14) // 14 is the size of the header
 	header.WorldDataStart = header.PalletDataStart + calculateSizeOfPallet(palletData)
 	header.ChunkWidth = int16(config.XSize)
-	header.ChunkHeight = int16(ChunkHeight)
+	header.ChunkHeight = int16(config.YSize)
 	header.ChunkDepth = int16(config.ZSize)
 
 	// Write the header
