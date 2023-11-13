@@ -11,9 +11,9 @@ import (
 const (
 	// Chunk dimensions
 	ChunkWidth        = 16
-	ChunkHeight       = 128
+	ChunkHeight       = 64
 	ChunkDepth        = 16
-	AmplitudeConstant = 128
+	AmplitudeConstant = 50
 )
 
 type TG_Config struct {
