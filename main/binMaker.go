@@ -43,6 +43,8 @@ func addWorldDataToBinaryNoRLE(worldData *[]TG_Level_Chunk, dataBuffer *[]byte) 
 		println("Adding Chunk:", index)
 		chunkData = compressedint16arrayToBytes(&chunk.BlockData)
 		*dataBuffer = append(*dataBuffer, 0xFF, 0xAA, 0xFF, 0xAA) // Chunk start flag
+		*dataBuffer = append(*dataBuffer, int32ToBytes(chunk.ChunkPosition.x)...)
+		*dataBuffer = append(*dataBuffer, int32ToBytes(chunk.ChunkPosition.z)...)
 		*dataBuffer = append(*dataBuffer, chunkData...)
 		*dataBuffer = append(*dataBuffer, 0xAA, 0xFF, 0xAA, 0xFF) // Chunk end flag
 	}
