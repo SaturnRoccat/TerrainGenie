@@ -11,7 +11,7 @@ import (
 const (
 	// Chunk dimensions
 	ChunkWidth        = 16
-	ChunkHeight       = 358
+	ChunkHeight       = 256
 	ChunkDepth        = 16
 	AmplitudeConstant = 120
 )
