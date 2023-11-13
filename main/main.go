@@ -38,6 +38,6 @@ func main() {
 	// The reason for this is because it uses unsafe pointers and it modifies the data in the world chunks
 	if generateJS {
 		fmt.Println("Generating JavaScript...")
-		createJSData(&config, &palletData)
+		createJSDataNonRLE(&config, &palletData)
 	}
 }
