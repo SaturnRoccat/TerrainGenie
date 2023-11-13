@@ -32,7 +32,7 @@ func createJSDataNonRLE(config *TG_Config, palletData *TG_Pallet_Data) {
 
 		var arrayAsBytes [(ChunkWidth * ChunkHeight * ChunkDepth) * 4]byte
 		for index, block := range chunk.BlockData {
-			ourBytes := [4]byte{0x22, 0x61, 0x22, 0x2C}
+			ourBytes := [4]byte{0x27, 0x61, 0x27, 0x2C}
 			ourBytes[1] += byte(block)
 			arrayAsBytes[index*4] = ourBytes[0]
 			arrayAsBytes[index*4+1] = ourBytes[1]
