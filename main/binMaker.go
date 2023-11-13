@@ -96,7 +96,7 @@ func turnWorldDataToBinary(worldData *[]TG_Level_Chunk, config *TG_Config, palle
 	println("Added pallet to buffer")
 	println("Adding world data to buffer...")
 	if config.EnableRLE {
-		// We cry here
+		addWorldDataToBinaryNoRLE(worldData, &dataBuffer)
 	} else {
 		addWorldDataToBinaryNoRLE(worldData, &dataBuffer)
 	}
