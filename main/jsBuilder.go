@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"unsafe"
 )
 
 func addJsLine(TSCode *string, line string) {
@@ -11,48 +10,55 @@ func addJsLine(TSCode *string, line string) {
 }
 
 func createJSDataNonRLE(config *TG_Config, palletData *TG_Pallet_Data) {
-	var TSCode = "export const blockPallet = [" // Start of the pallet
+	var JSCode = "export const blockPallet = [" // Start of the pallet
 	for _, blockName := range palletData.pallet {
-		TSCode += "\"" + blockName + "\","
+		JSCode += "\"" + blockName + "\","
 	}
 	// remove trailing comma
-	TSCode = TSCode[:len(TSCode)-1]
-	TSCode += "];\n" // End of the pallet
-	print(TSCode)
-	// Add used data to the TSCode
-	addJsLine(&TSCode, "export const chunkWidth = "+fmt.Sprint(config.XSize)+";")
-	addJsLine(&TSCode, "export const chunkDepth = "+fmt.Sprint(config.ZSize)+";")
-	addJsLine(&TSCode, "export const chunkHeight = "+fmt.Sprint(config.YSize)+";")
-	addJsLine(&TSCode, "export const RLE = false;")
-	print(TSCode)
+	JSCode = JSCode[:len(JSCode)-1]
+	JSCode += "];\n" // End of the pallet
+	println(JSCode)
+	JSCode += "import { Chunk } from \"./types.js\";\n"
+	JSCode += "export const ChunkAmmountX = " + fmt.Sprint(config.XSize) + ";\n"
+	JSCode += "export const ChunkAmmountZ = " + fmt.Sprint(config.ZSize) + ";\n"
+	JSCode += "export const chunkSizeY = " + fmt.Sprint(ChunkHeight) + ";\n"
+	JSCode += "export const chunkSizeXZ = " + fmt.Sprint(ChunkWidth) + ";\n"
+
 	// Add the chunk data
-	addJsLine(&TSCode, "export const chunkData = [\n") // Start of the chunk data this could get thick
+	JSCode += "export const chunkData = [\n" // Start of the chunk data this could get thick
 	for _, chunk := range WorldChunks {
-		addJsLine(&TSCode, "[")
+		JSCode += "new Chunk(" + fmt.Sprint(chunk.ChunkPosition.x) + "," + fmt.Sprint(chunk.ChunkPosition.z)
+		JSCode += "," + fmt.Sprint(ChunkWidth) + "," + fmt.Sprint(ChunkHeight)
+		JSCode += ",["
 
-		var arrayAsBytes [(ChunkWidth * ChunkHeight * ChunkDepth) * 4]byte
-		for index, block := range chunk.BlockData {
-			ourBytes := [4]byte{0x27, 0x61, 0x27, 0x2C}
-			ourBytes[1] += byte(block)
-			arrayAsBytes[index*4] = ourBytes[0]
-			arrayAsBytes[index*4+1] = ourBytes[1]
-			arrayAsBytes[index*4+2] = ourBytes[2]
-			arrayAsBytes[index*4+3] = ourBytes[3]
+		var byteArray [(ChunkWidth * ChunkDepth * ChunkHeight) * 4]byte
+		overallIndex := 0
+		for x := int32(0); x < ChunkWidth; x++ {
+			for z := int32(0); z < ChunkDepth; z++ {
+				for y := int32(0); y < ChunkHeight; y++ {
+					var ourBytes = [4]byte{0x27, 0x61, 0x27, 0x2C}
+					var index = TG_3D_PosToIndex(TG_3D_Pos{x, y, z})
+					ourBytes[1] += byte(chunk.BlockData[index])
+
+					byteArray[overallIndex*4] = ourBytes[0]
+					byteArray[overallIndex*4+1] = ourBytes[1]
+					byteArray[overallIndex*4+2] = ourBytes[2]
+					byteArray[overallIndex*4+3] = ourBytes[3]
+					overallIndex++
+				}
+			}
 		}
-		// Obtain a pointer to the array
-		unsafeAABpointer := unsafe.Pointer(&arrayAsBytes)
-		// convert that pointer to a byte pointer
-		unsafeAABpointerAsBytePointer := (*byte)(unsafeAABpointer)
 
-		addJsLine(&TSCode, unsafe.String(unsafeAABpointerAsBytePointer, ((ChunkWidth*ChunkHeight*ChunkDepth)*4)-1))
-		addJsLine(&TSCode, "],")
-		//print(TSCode)
+		// Convert the byte array to a string
+		conversionString := string(byteArray[:((ChunkWidth*ChunkDepth*ChunkHeight)*4)-1])
+		JSCode += conversionString
+		JSCode += "]),\n"
 	}
-	TSCode = TSCode[:len(TSCode)-2]
-	addJsLine(&TSCode, "];\n") // End of the chunk data
+	// remove trailing comma
+	JSCode = JSCode[:len(JSCode)-2]
+	JSCode += "];\n" // End of the chunk data
 
-	// Write the file
-	os.WriteFile(config.JSOutputPath, []byte(TSCode), 0644)
+	os.WriteFile(config.JSOutputPath, []byte(JSCode), 0644)
 }
 
 func createJSDataRLE(config *TG_Config, palletData *TG_Pallet_Data) {
