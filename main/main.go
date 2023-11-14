@@ -23,6 +23,16 @@ func main() {
 	flag.BoolVar(&generateJS, "JS", true, "Generate JavaScript from the world data")
 	flag.BoolVar(&generateHeightMapVer, "GMV", true, "Generate JavaScript from the world data only exporting the height map this makes smaller filles but not caves")
 	config.Seed = 10
+
+	flag.IntVar(&config.TerrainBlanketOctaves, "TBO", 6, "Terrain blanket octaves")
+	flag.Float64Var(&config.TerrainBlanketLacun, "TBL", 1.8, "Terrain blanket lacunarity")
+	flag.Float64Var(&config.TerrainBlanketGain, "TBG", 0.6, "Terrain blanket gain")
+	flag.Float64Var(&config.TerrainBlanketFreq, "TBF", 0.02, "Terrain blanket frequency")
+
+	flag.IntVar(&config.CaveShapeOctaves, "CSO", 4, "Cave shape octaves")
+	flag.Float64Var(&config.CaveShapeLacun, "CSL", 2.0, "Cave shape lacunarity")
+	flag.Float64Var(&config.CaveShapeGain, "CSG", 0.5, "Cave shape gain")
+	flag.Float64Var(&config.CaveShapeFreq, "CSF", 0.01, "Cave shape frequency")
 	flag.Parse()
 
 	fmt.Println("Output path:", config.OutputPath)
