@@ -22,7 +22,6 @@ func main() {
 	flag.BoolVar(&config.EnableRLE, "RLE", false, "This is experimental and may not work")
 	flag.BoolVar(&generateJS, "JS", true, "Generate JavaScript from the world data")
 	flag.BoolVar(&generateHeightMapVer, "GMV", true, "Generate JavaScript from the world data only exporting the height map this makes smaller filles but not caves")
-	config.Seed = 10
 
 	flag.IntVar(&config.TerrainBlanketOctaves, "TBO", 6, "Terrain blanket octaves")
 	flag.Float64Var(&config.TerrainBlanketLacun, "TBL", 1.8, "Terrain blanket lacunarity")
