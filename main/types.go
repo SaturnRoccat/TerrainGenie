@@ -98,15 +98,16 @@ func makeTG_Generator(config *TG_Config) TG_Generator {
 	var gen TG_Generator
 	gen.TerrainBlanketShapeState = fastnoise.New[float32]()
 	gen.TerrainBlanketShapeState.Seed = config.Seed
-	gen.TerrainBlanketShapeState.NoiseType(fastnoise.OpenSimplex2S)
+	gen.TerrainBlanketShapeState.NoiseType(fastnoise.Perlin)
 	gen.TerrainBlanketShapeState.Octaves = config.TerrainBlanketOctaves
 	gen.TerrainBlanketShapeState.Lacunarity = float32(config.TerrainBlanketLacun)
 	gen.TerrainBlanketShapeState.Gain = float32(config.TerrainBlanketGain)
 	gen.TerrainBlanketShapeState.Frequency = float32(config.TerrainBlanketFreq)
+	gen.TerrainBlanketShapeState.DomainWarpType = fastnoise.DomainWarpOpenSimplex2Reduced
 
 	gen.CaveShapeState = fastnoise.New[float32]()
 	gen.CaveShapeState.Seed = (((config.Seed * 897213) ^ config.Seed) * 219038) | config.Seed/2 // I don't know why this but its here now
-	gen.CaveShapeState.NoiseType(fastnoise.OpenSimplex2S)
+	gen.CaveShapeState.NoiseType(fastnoise.Perlin)
 	gen.CaveShapeState.Octaves = config.CaveShapeOctaves
 	gen.CaveShapeState.Lacunarity = float32(config.CaveShapeLacun)
 	gen.CaveShapeState.Gain = float32(config.CaveShapeGain)
