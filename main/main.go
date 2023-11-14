@@ -11,6 +11,7 @@ func main() {
 	var config TG_Config
 	var generateJS bool = true
 	var generateHeightMapVer bool = false
+	var enableWS bool = false
 
 	flag.StringVar(&config.OutputPath, "output", "./levelData", "Output path for generated terrain data")
 	flag.StringVar(&config.JSOutputPath, "TSOutput", "./levelData.js", "Output path for the generated JavaScript file (This is only used if the -JS flag is set)")
@@ -32,6 +33,8 @@ func main() {
 	flag.Float64Var(&config.CaveShapeLacun, "CSL", 2.0, "Cave shape lacunarity")
 	flag.Float64Var(&config.CaveShapeGain, "CSG", 0.5, "Cave shape gain")
 	flag.Float64Var(&config.CaveShapeFreq, "CSF", 0.01, "Cave shape frequency")
+	flag.BoolVar(&enableWS, "WS", true, "Enables an experimental feature to send the world data over a websocket to a client")
+
 	flag.Parse()
 
 	fmt.Println("Output path:", config.OutputPath)
@@ -44,6 +47,10 @@ func main() {
 
 	fmt.Println("Generating binary of world data this will take some time...")
 	buildDataBuffer(config, &palletData)
+
+	if enableWS {
+		enableWSServer(&palletData)
+	}
 
 	// THIS MUST ALLWAYS BE THE LAST THING TO RUN
 	// The reason for this is because it uses unsafe pointers and it modifies the data in the world chunks
