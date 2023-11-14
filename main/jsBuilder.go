@@ -6,11 +6,11 @@ import (
 )
 
 func createSetblockCommand(arrayBuf *[]byte, x uint32, y uint32, z uint32, blockID uint16, palletData *TG_Pallet_Data) {
-	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("\"setblock %d %d %d %s\",", x, y, z, palletData.pallet[blockID]))...)
+	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf(" \"setblock %d %d %d %s\",", x, y, z, palletData.pallet[blockID]))...)
 }
 
 func createFillBlockCommand(arrayBuf *[]byte, x uint32, y uint32, z uint32, blockID uint16, palletData *TG_Pallet_Data) {
-	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("\"fill %d %d %d %d -64 %d %s\",", x, y, z, x, z, palletData.pallet[blockID]))...)
+	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf(" \"fill %d %d %d %d -64 %d %s\",", x, y, z, x, z, palletData.pallet[blockID]))...)
 }
 
 func addJsLine(JSCode *string, line string) {
@@ -18,14 +18,14 @@ func addJsLine(JSCode *string, line string) {
 }
 
 func addChunkPositionBuffer(arrayBuf *[]byte) {
-	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("export const chunkPositions = ["))...)
+	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("\nexport const chunkPositions = ["))...)
 	for _, chunk := range WorldChunks {
-		*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("%d,%d,", chunk.ChunkPosition.x*16, chunk.ChunkPosition.z*16))...)
+		*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("%d, %d, ", chunk.ChunkPosition.x*16, chunk.ChunkPosition.z*16))...)
 	}
 	(*arrayBuf)[len(*arrayBuf)-1] = ']' // Remove trailing comma
 	*arrayBuf = append(*arrayBuf, []byte(";")...)
 
-	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("export const eachChunkSize = %d;", ChunkWidth*ChunkDepth*ChunkHeight))...)
+	*arrayBuf = append(*arrayBuf, []byte(fmt.Sprintf("\nexport const eachChunkSize = %d;", ChunkWidth*ChunkDepth*ChunkHeight))...)
 }
 
 func createJSDataNonRLE(config *TG_Config, palletData *TG_Pallet_Data) {
