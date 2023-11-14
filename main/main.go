@@ -21,7 +21,7 @@ func main() {
 	flag.BoolVar(&config.OutputNonCompressed, "ONC", true, "Output non compressed binary data")
 	flag.BoolVar(&config.EnableRLE, "RLE", false, "This is experimental and may not work")
 	flag.BoolVar(&generateJS, "JS", true, "Generate JavaScript from the world data")
-	flag.BoolVar(&generateHeightMapVer, "GMV", true, "Generate JavaScript from the world data only exporting the height map this makes smaller filles but not caves")
+	flag.BoolVar(&generateHeightMapVer, "GMV", true, "Generate JavaScript from the world data only exporting the height map this makes smaller files but not caves")
 
 	flag.IntVar(&config.TerrainBlanketOctaves, "TBO", 6, "Terrain blanket octaves")
 	flag.Float64Var(&config.TerrainBlanketLacun, "TBL", 1.8, "Terrain blanket lacunarity")
@@ -45,7 +45,7 @@ func main() {
 	fmt.Println("Generating binary of world data this will take some time...")
 	buildDataBuffer(config, &palletData)
 
-	// THIS MUST ALLWAYS BE THE LAST THING TO RUN
+	// THIS MUST ALWAYS BE THE LAST THING TO RUN
 	// The reason for this is because it uses unsafe pointers and it modifies the data in the world chunks
 	if generateJS {
 		fmt.Println("Generating JavaScript...")
