@@ -26,6 +26,20 @@ type TG_Config struct {
 	EnableRLE           bool
 	OutputNonCompressed bool
 	// Noise parameters
+
+	// Terrain blanket shape
+	TerrainBlanketOctaves int
+	TerrainBlanketLacun   float64
+	TerrainBlanketGain    float64
+	TerrainBlanketFreq    float64
+	TerrainBlanketAmp     float64
+
+	// CaveShape
+	CaveShapeOctaves int
+	CaveShapeLacun   float64
+	CaveShapeGain    float64
+	CaveShapeFreq    float64
+	CaveShapeAmp     float64
 }
 
 type TG_Generator struct {
@@ -80,15 +94,24 @@ func mapToZeroOne(value float32) float32 {
 
 	return mappedValue
 }
-func makeTG_Generator(seed int) TG_Generator {
+func makeTG_Generator(config *TG_Config) TG_Generator {
 	var gen TG_Generator
 	gen.TerrainBlanketShapeState = fastnoise.New[float32]()
-	gen.TerrainBlanketShapeState.Seed = seed
+	gen.TerrainBlanketShapeState.Seed = config.Seed
 	gen.TerrainBlanketShapeState.NoiseType(fastnoise.OpenSimplex2S)
+	gen.TerrainBlanketShapeState.Octaves = config.TerrainBlanketOctaves
+	gen.TerrainBlanketShapeState.Lacunarity = float32(config.TerrainBlanketLacun)
+	gen.TerrainBlanketShapeState.Gain = float32(config.TerrainBlanketGain)
+	gen.TerrainBlanketShapeState.Frequency = float32(config.TerrainBlanketFreq)
 
 	gen.CaveShapeState = fastnoise.New[float32]()
-	gen.CaveShapeState.Seed = (((seed * 897213) ^ seed) * 219038) | seed/2 // I don't know why this but its here now
+	gen.CaveShapeState.Seed = (((config.Seed * 897213) ^ config.Seed) * 219038) | config.Seed/2 // I don't know why this but its here now
 	gen.CaveShapeState.NoiseType(fastnoise.OpenSimplex2S)
+	gen.CaveShapeState.Octaves = config.CaveShapeOctaves
+	gen.CaveShapeState.Lacunarity = float32(config.CaveShapeLacun)
+	gen.CaveShapeState.Gain = float32(config.CaveShapeGain)
+	gen.CaveShapeState.Frequency = float32(config.CaveShapeFreq)
+
 	return gen
 }
 
