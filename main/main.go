@@ -11,12 +11,11 @@ func main() {
 	var config TG_Config
 	var generateJS bool = true
 	var generateHeightMapVer bool = false
-
 	flag.StringVar(&config.OutputPath, "output", "./levelData", "Output path for generated terrain data")
 	flag.StringVar(&config.JSOutputPath, "TSOutput", "./levelData.js", "Output path for the generated JavaScript file (This is only used if the -JS flag is set)")
 	flag.IntVar(&config.Seed, "seed", rand.Int(), "Seed for random number generator")
-	flag.IntVar(&config.XSize, "X", 4, "The size in CHUNKS of the X axis of the world")
-	flag.IntVar(&config.ZSize, "Z", 4, "The size in CHUNKS of the Z axis of the world")
+	flag.IntVar(&config.XSize, "X", 8, "The size in CHUNKS of the X axis of the world")
+	flag.IntVar(&config.ZSize, "Z", 8, "The size in CHUNKS of the Z axis of the world")
 	flag.IntVar(&config.YSize, "Y", 256, "The size in BLOCKS of the Y axis of the world")
 	flag.BoolVar(&config.OutputNonCompressed, "ONC", true, "Output non compressed binary data")
 	flag.BoolVar(&config.EnableRLE, "RLE", false, "This is experimental and may not work")
@@ -32,8 +31,11 @@ func main() {
 	flag.Float64Var(&config.CaveShapeLacun, "CSL", 2.0, "Cave shape lacunarity")
 	flag.Float64Var(&config.CaveShapeGain, "CSG", 0.5, "Cave shape gain")
 	flag.Float64Var(&config.CaveShapeFreq, "CSF", 0.01, "Cave shape frequency")
-	flag.Parse()
 
+	flag.StringVar(&config.CustomHeightMap, "CHM", "", "Use a custom height map. Takes in a path to .bmp file.")
+
+	config.CustomHeightMap = "C:\\Users\\pjhnt\\Downloads\\o.bmp"
+	flag.Parse()
 	fmt.Println("Output path:", config.OutputPath)
 	fmt.Println("Seed:", config.Seed)
 
@@ -43,7 +45,7 @@ func main() {
 	addToPallet(&palletData, "minecraft:stone")
 
 	fmt.Println("Generating binary of world data this will take some time...")
-	buildDataBuffer(config, &palletData)
+	buildDataBuffer(&config, &palletData)
 
 	// THIS MUST ALLWAYS BE THE LAST THING TO RUN
 	// The reason for this is because it uses unsafe pointers and it modifies the data in the world chunks

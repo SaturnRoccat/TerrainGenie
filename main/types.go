@@ -25,6 +25,7 @@ type TG_Config struct {
 	YSize               int
 	EnableRLE           bool
 	OutputNonCompressed bool
+	CustomHeightMap     string
 	// Noise parameters
 
 	// Terrain blanket shape
