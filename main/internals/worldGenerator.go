@@ -35,7 +35,12 @@ func (wg WorldGenerator) GetHeightMap(chunkX, chunkZ int, writeMap *[ChunkWidth 
 		x := lx + (chunkX * ChunkWidth)
 		for lz := 0; lz < ChunkWidth; lz++ {
 			z := lz + (chunkZ * ChunkWidth)
-			(*writeMap)[lx+lz*ChunkWidth] = uint16(wg.GetHeightAt(x, z))
+			// Ensure GetHeightAt returns non-zero values for x and z coordinates
+			height := uint16(wg.GetHeightAt(x, z))
+			// Calculate the index properly
+			index := lx + lz*ChunkWidth
+			// Assign the height value to the writeMap array
+			(*writeMap)[index] = height
 		}
 	}
 }

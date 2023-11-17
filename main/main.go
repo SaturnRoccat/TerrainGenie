@@ -25,6 +25,7 @@ func main() {
 	flag.Parse()
 	fmt.Println("Started terrain genie!...")
 
+	// We do this so that if in the rare case that the noise value generated is .9 before the conversion to int it will still be in the chunk and not out of bounds
 	if internals.ChunkHeight < nc.Amplitude {
 		nc.Amplitude = internals.ChunkHeight - 3
 	}
@@ -33,6 +34,21 @@ func main() {
 	wg := internals.MakeWG(nc)
 
 	fillChunksWithHeightMap(&ChunkArray, &wg)
+
+	// Create the pallet
+	var pallet []string
+	pallet = append(pallet, "minecraft:air")
+	pallet = append(pallet, "minecraft:stone")
+	pallet = append(pallet, "minecraft:grass_block")
+
+	// Create the fill buffer
+	var fillBuffer, chunkSizeBuffer = createFillBuffer(&ChunkArray, &pallet)
+
+	// Create the Chunk Positions buffer
+	var chunkPositionBuffer = createChunkPositinBuffer(&ChunkArray)
+
+	// Export the terrain data to JS
+	exportTerrainDataToJS(&fillBuffer, &chunkPositionBuffer, &chunkSizeBuffer)
 
 	fmt.Println("Done!")
 }
