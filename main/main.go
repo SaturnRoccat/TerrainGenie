@@ -10,6 +10,7 @@ import (
 func main() {
 	var gc internals.GeneratorConfig
 	var nc internals.NoiseConfig
+	var oc internals.OtherConfig
 
 	flag.IntVar(&gc.TotalChunksX, "X", 8, "The total number of chunks in the X axis")
 	flag.IntVar(&gc.TotalChunksZ, "Z", 8, "The total number of chunks in the Z axis")
@@ -21,6 +22,8 @@ func main() {
 	flag.Float64Var(&nc.Lacunarity, "lacunarity", 2.0, "The lacunarity of the noise generator")
 	flag.Float64Var(&nc.Gain, "gain", 0.5, "The gain of the noise generator")
 	flag.IntVar(&nc.Amplitude, "amplitude", 60, "The amplitude of the noise generator")
+
+	flag.StringVar(&oc.OutputJavasciptPath, "output", "levelData.js", "The file to output the terrain data to")
 
 	flag.Parse()
 	fmt.Println("Started terrain genie!...")
@@ -48,7 +51,7 @@ func main() {
 	var chunkPositionBuffer = createChunkPositinBuffer(&ChunkArray)
 
 	// Export the terrain data to JS
-	exportTerrainDataToJS(&fillBuffer, &chunkPositionBuffer, &chunkSizeBuffer)
+	exportTerrainDataToJS(&oc, &fillBuffer, &chunkPositionBuffer, &chunkSizeBuffer)
 
 	fmt.Println("Done!")
 }
